@@ -29,6 +29,7 @@ const auth = (req, res, next) => {
     req.content = {
       id: data._id,
       user: data.username,
+      name: data.name,
     };
     return next();
   });

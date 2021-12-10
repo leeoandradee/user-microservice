@@ -4,9 +4,9 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const User = require("./model/user");
 const ManagerUser = require("./model/manageuser");
-const create_token = require("./utils/token");
 const { check, validationResult } = require("express-validator");
 const auth = require("./middleware/auth");
+const { createToken, getTokenInfo } = require("./utils/token");
 
 const app = express();
 app.use(express.json());
@@ -85,9 +85,7 @@ app.post(
           return res.status(403).send({ output: `A senha não é válida` });
         }
 
-        console.log(data._id);
-        console.log(data.username);
-        const token = create_token(data._id, data.username);
+        const token = createToken(data._id, data.username, data.name);
         const info = new ManagerUser({
           userid: data._id,
           username: data.username,
@@ -101,9 +99,11 @@ app.post(
 );
 
 app.post("/user/password", auth, (req, res) => {
-  const { username, currentPassword, newPassword } = req.body;
+  const { currentPassword, newPassword } = req.body;
 
-  User.findOne({ username: username }, (error, user) => {
+  const token = req.headers.authorization.split(" ")[1];
+  const tokenData = getTokenInfo(token);
+  User.findOne({ username: tokenData.user }, (error, user) => {
     if (error) {
       return res
         .status(500)

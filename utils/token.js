@@ -1,11 +1,18 @@
 const jwt = require("jsonwebtoken");
 const config = require("../config/config");
 
-const create_token = (id, username) => {
-  return jwt.sign({ id: id, user: username }, config.jwt_key, {
+const createToken = (id, username, name) => {
+  return jwt.sign({ id: id, user: username, name: name }, config.jwt_key, {
     expiresIn: config.jwt_expires,
   });
 };
 
-module.exports = create_token;
+const getTokenInfo = (token) => {
+  return jwt.decode(token);
+}
+
+module.exports = {
+  createToken,
+  getTokenInfo,
+}
 
