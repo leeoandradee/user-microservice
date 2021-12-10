@@ -14,7 +14,7 @@ app.use(express.json());
 app.use(cors());
 
 const url =
-  "mongodb+srv://leeoandradee:BttT3RUtcAMtjYf@clusteruser.zrz7c.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+  "";
 
 mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
 
