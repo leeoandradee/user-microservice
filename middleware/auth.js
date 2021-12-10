@@ -5,7 +5,7 @@ const auth = (req, res, next) => {
   const token_created = req.headers.authorization;
 
   if (!token_created) {
-    return res.status(401).send({ output: `token não informado` });
+    return res.status(401).send({ error: "token não informado" });
   }
 
   const parts = token_created.split(" ");
@@ -19,10 +19,12 @@ const auth = (req, res, next) => {
   if (!/^Bearer$/i.test(scheme)) {
     return res.status(401).send({ error: "token mal formado" });
   }
-  
-  jwt.verify(token_created, conf.jwt_key, (error, data) => {
+
+  jwt.verify(token, conf.jwt_key, (error, data) => {
     if (error) {
-      return res.status(401).send({ output: `Token fail ->${error}` });
+      return res
+        .status(401)
+        .send({ output: `falha ao verificar o token -> ${error}` });
     }
     req.content = {
       id: data._id,

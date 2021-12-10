@@ -75,16 +75,18 @@ app.post(
         return res.status(403).send({ output: `Usuário não localizado` });
       }
 
-      bcrypt.compare(pswd, data.password, (error, data) => {
+      bcrypt.compare(pswd, data.password, (error, same) => {
         if (error) {
           return res
             .status(500)
             .send({ output: `Erro interno na validação da senha` });
         }
-        if (!data) {
+        if (!same) {
           return res.status(403).send({ output: `A senha não é válida` });
         }
 
+        console.log(data._id);
+        console.log(data.username);
         const token = create_token(data._id, data.username);
         const info = new ManagerUser({
           userid: data._id,

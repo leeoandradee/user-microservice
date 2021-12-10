@@ -8,3 +8,4 @@ const create_token = (id, username) => {
 };
 
 module.exports = create_token;
+
